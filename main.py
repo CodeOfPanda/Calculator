@@ -1,4 +1,4 @@
-from operator import truediv, mul, add, sub
+from operator import pow, truediv, mul, add, sub
 import tkinter as tk
 
 # Operator python functions
@@ -6,7 +6,8 @@ operators = {
     '+': add,
     '-': sub,
     '*': mul,
-    '/': truediv
+    '/': truediv,
+    '^': pow
 }
 calculation = ""
 
@@ -20,10 +21,8 @@ def add_to_calculation(symbol):
 
 def evalute_calculation():
     global calculation
-    print(calculation)
     try:
         newResult = str(parse(calculation))
-        print("Calculation is now: ", newResult)
         result.delete(1.0, "end")
         result.insert(1.0, newResult)
     except:
@@ -55,11 +54,9 @@ def parse(s):
         x = s.replace(s[start:end+1], 'x')
         calc = calculate(parensEq)
         s = x.replace(x[start:start+1], str(calc))
-        parse(s)  # recursively call parse until no more parenthesis
+        return parse(s)  # recursively call parse until no more parenthesis
     else:
-        print("Answer: " + str(calculate(str(s))))
-        answer = str(calculate(str(s)))
-        return answer.strip()
+        return str(calculate(str(s)))
 
 
 # Tkinter GUI
@@ -136,11 +133,15 @@ btn_close = tk.Button(root, text=")", command=lambda: add_to_calculation(
 btn_close.grid(row=5, column=3)
 
 btn_clear = tk.Button(root, text="C", command=clear_field,
-                      width=11, font=("Arial", 14))
-btn_clear.grid(row=6, column=1, columnspan=2)
+                      width=5, font=("Arial", 14))
+btn_clear.grid(row=6, column=1)
 
 btn_equals = tk.Button(
-    root, text="=", command=evalute_calculation, width=11, font=("Arial", 14))
-btn_equals.grid(row=6, column=3, columnspan=2)
+    root, text="=", command=evalute_calculation, width=12, font=("Arial", 14))
+btn_equals.grid(row=6, column=2, columnspan=2)
+
+btn_pow = tk.Button(root, text="^", command=lambda: add_to_calculation(
+    "^"), width=5, font=("Arial", 14))
+btn_pow.grid(row=6, column=4)
 
 root.mainloop()
